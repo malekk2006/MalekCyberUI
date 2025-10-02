@@ -1,84 +1,63 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Malek Cyber UI — Demo</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+  <meta charset="UTF-8">
+  <title>Cyber UI</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="main.js"></script>
 </head>
 <body>
-  <div class="app">
-    <header class="top">
-      <div class="title">MalekCyberUI <span class="small">— لوحة سيبرية</span></div>
-      <div class="status">STATUS: <span class="online">ONLINE</span></div>
-    </header>
+  <div class="screen">
+    <!-- أعلى -->
+    <div class="top-bar">
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="net-status">
+        <span>STATE: IPv4</span> | 
+        <span class="online">ONLINE</span> | 
+        <span id="ping">PING: -- ms</span>
+      </div>
+    </div>
 
-    <main class="grid">
-      <section class="panel left">
+    <!-- شبكة + رسوم -->
+    <div class="main-grid">
+      <div class="left-panel">
         <div class="card">
-          <div class="card-head">NETWORK</div>
-          <div class="stat-row">
-            <div>
-              <div class="muted">PING</div>
-              <div id="ping" class="big">— ms</div>
-            </div>
-            <div style="flex:1">
-              <canvas id="netChart"></canvas>
-            </div>
-          </div>
+          <h3>CPU USAGE</h3>
+          <canvas id="cpuChart"></canvas>
         </div>
-
         <div class="card">
-          <div class="card-head">SYSTEM</div>
-          <div class="stat-row">
-            <div style="width:120px">
-              <div class="muted">CPU</div>
-              <div id="cpu" class="big">—%</div>
-            </div>
-            <div style="flex:1">
-              <canvas id="cpuChart"></canvas>
-            </div>
-            <div style="width:120px">
-              <div class="muted">MEM</div>
-              <div id="mem" class="big">—%</div>
-            </div>
-          </div>
+          <h3>MEMORY</h3>
+          <div id="memory">--%</div>
         </div>
-
         <div class="card">
-          <div class="card-head">TOP PROCESSES</div>
-          <div id="procs" class="muted">1. eDEX-UI  2. nvsvc  3. payload.bin</div>
+          <h3>NETWORK TRAFFIC</h3>
+          <canvas id="netChart"></canvas>
         </div>
-      </section>
+      </div>
 
-      <section class="panel right">
-        <div class="term">
-          <div class="tabbar">
-            <div class="tab active">MAIN</div>
-            <div class="tab">EMPTY</div>
-            <div class="tab">EMPTY</div>
-          </div>
-          <div id="log" class="log">
-Initializing UI...
-          </div>
-          <div class="prompt">
-            <span class="muted">PS C:\Users\malek&gt;</span>
-            <span id="typing"># اضغط زر START للتشغيل</span>
-            <button id="btnStart" class="btn">START</button>
-          </div>
+      <!-- التيرمنال -->
+      <div class="terminal">
+        <div class="term-header">MAIN -</div>
+        <div id="terminal-log" class="log">
+          Initializing Cyber UI...<br>
         </div>
-      </section>
-    </main>
+        <div class="prompt">
+          PS C:\Users\Cyber&gt; <span id="typing"></span>
+        </div>
+      </div>
+    </div>
 
-    <footer class="footer">
-      <div>Repo: <span class="muted">github.com/your-username/MalekCyberUI</span></div>
-      <div class="muted">مصنوع بحب — نقدر نضيف backend لاحقاً</div>
-    </footer>
+    <!-- أسفل -->
+    <div class="bottom-bar">
+      <div class="folders">
+        <span>show_glob</span>
+        <span>blob_storage</span>
+        <span>cache</span>
+        <span>fonts</span>
+        <span>GPUCache</span>
+      </div>
+      <div class="keys">[ESC] [TAB] Q W E R T Y U I</div>
+    </div>
   </div>
 </body>
 </html>
