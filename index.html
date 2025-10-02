@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Malek Cyber UI — Demo</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="title">MalekCyberUI <span class="small">— لوحة سيبرية</span></div>
+      <div class="status">STATUS: <span class="online">ONLINE</span></div>
+    </header>
+
+    <main class="grid">
+      <section class="panel left">
+        <div class="card">
+          <div class="card-head">NETWORK</div>
+          <div class="stat-row">
+            <div>
+              <div class="muted">PING</div>
+              <div id="ping" class="big">— ms</div>
+            </div>
+            <div style="flex:1">
+              <canvas id="netChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">SYSTEM</div>
+          <div class="stat-row">
+            <div style="width:120px">
+              <div class="muted">CPU</div>
+              <div id="cpu" class="big">—%</div>
+            </div>
+            <div style="flex:1">
+              <canvas id="cpuChart"></canvas>
+            </div>
+            <div style="width:120px">
+              <div class="muted">MEM</div>
+              <div id="mem" class="big">—%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">TOP PROCESSES</div>
+          <div id="procs" class="muted">1. eDEX-UI  2. nvsvc  3. payload.bin</div>
+        </div>
+      </section>
+
+      <section class="panel right">
+        <div class="term">
+          <div class="tabbar">
+            <div class="tab active">MAIN</div>
+            <div class="tab">EMPTY</div>
+            <div class="tab">EMPTY</div>
+          </div>
+          <div id="log" class="log">
+Initializing UI...
+          </div>
+          <div class="prompt">
+            <span class="muted">PS C:\Users\malek&gt;</span>
+            <span id="typing"># اضغط زر START للتشغيل</span>
+            <button id="btnStart" class="btn">START</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>Repo: <span class="muted">github.com/your-username/MalekCyberUI</span></div>
+      <div class="muted">مصنوع بحب — نقدر نضيف backend لاحقاً</div>
+    </footer>
+  </div>
+</body>
+</html>
