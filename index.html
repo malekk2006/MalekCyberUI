@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MalekCyberUI — Cyber Panel</title>
+  <title>MalekCyberUI — Cyber Panel (Hacker)</title>
 
-  <!-- خطوط ومكتبات -->
+  <!-- خط مونو -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js + OrbitControls (non-module build for simplicity) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- ستايل المشروع -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- الكود الرئيسي -->
   <script defer src="main.js"></script>
 </head>
 <body>
@@ -24,7 +25,7 @@
     <header class="topbar">
       <div class="brand">
         <div class="logo">MAL<span>EK</span></div>
-        <div class="subtitle">Cyber UI</div>
+        <div class="subtitle">Cyber UI — Hacker Mode</div>
       </div>
       <div class="status-area">
         <div id="clock" class="clock">00:00:00</div>
@@ -42,40 +43,32 @@
       <aside class="left">
         <div class="card globe-card">
           <div class="card-head">WORLD VIEW</div>
-          <div id="globe-container" class="globe"></div>
+          <div id="globe-container" class="globe" title="اضغط لتكبير الكرة"></div>
+          <div class="globe-hint muted">اضغط على الكرة للتكبير — Esc للخروج</div>
         </div>
 
         <div class="card mini-cards">
-          <div class="mini">
-            <div class="label">CPU</div>
-            <div id="cpuVal" class="big">--%</div>
-          </div>
-          <div class="mini">
-            <div class="label">MEM</div>
-            <div id="memVal" class="big">--%</div>
-          </div>
-          <div class="mini">
-            <div class="label">TASKS</div>
-            <div id="tasksVal" class="big">--</div>
-          </div>
+          <div class="mini"><div class="label">CPU</div><div id="cpuVal" class="big">--%</div></div>
+          <div class="mini"><div class="label">MEM</div><div id="memVal" class="big">--%</div></div>
+          <div class="mini"><div class="label">TASKS</div><div id="tasksVal" class="big">--</div></div>
         </div>
 
         <div class="card small-chart">
           <div class="card-head">NETWORK</div>
-          <canvas id="netChart" height="110"></canvas>
+          <canvas id="netChart" height="120"></canvas>
         </div>
       </aside>
 
       <!-- CENTER: TERMINAL -->
       <section class="center">
-        <div class="term-card">
+        <div class="term-card card">
           <div class="term-head">
             <div class="tabs">
               <span class="tab active">MAIN</span>
               <span class="tab">SYS</span>
               <span class="tab">NET</span>
             </div>
-            <div class="term-meta">PS C:\Users\malek &gt;</div>
+            <div class="term-meta muted">PS C:\Users\malek &gt;</div>
           </div>
 
           <div id="terminal" class="terminal-log">
@@ -83,7 +76,7 @@ Initializing Cyber UI...
           </div>
 
           <div class="term-input">
-            <div class="prompt">PS C:\Users\malek &gt;</div>
+            <div class="prompt muted">PS C:\Users\malek &gt;</div>
             <div id="typing" class="typing"># اضغط START لتشغيل المحاكاة</div>
             <button id="btnStart" class="btn">START</button>
           </div>
@@ -116,7 +109,7 @@ Initializing Cyber UI...
         <div class="card keyboard-card">
           <div class="card-head">VIRTUAL KEYBOARD</div>
           <div id="vk" class="vk"></div>
-          <div class="muted small">اضغط المفاتيح لتظهر في التيرمنال</div>
+          <div class="muted small">اضغط المفاتيح أو استخدم لوحة المفاتيح الحقيقية</div>
         </div>
 
       </aside>
@@ -128,5 +121,12 @@ Initializing Cyber UI...
       <div class="muted">Made with ⚡ by the Cyber Team</div>
     </footer>
   </div>
+
+  <!-- FULLSCREEN GLOBE OVERLAY -->
+  <div id="globe-overlay" class="globe-overlay hidden" tabindex="-1">
+    <div id="globe-full" class="globe-full"></div>
+    <div class="overlay-hint muted">Esc للخروج — عجلة الفأرة للتكبير/التصغير — سحب لتدوير</div>
+  </div>
+
 </body>
 </html>
