@@ -1,0 +1,40 @@
+:root{
+  --bg:#030613;
+  --panel:#071019;
+  --accent:#00f0ff;
+  --accent2:#b86bff;
+  --muted:#9aa6b2;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Roboto Mono",monospace;background:linear-gradient(180deg,#011 0%,#061220 60%);color:#cfeff3}
+.app{display:flex;flex-direction:column;height:100vh;padding:14px;gap:12px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.title{font-weight:700;font-size:18px;color:var(--accent)}
+.small{font-size:12px;color:var(--muted);margin-left:8px}
+.status{color:var(--muted);font-size:13px}
+.online{color:#8df79a;font-weight:700;margin-left:6px}
+
+.grid{display:grid;grid-template-columns:360px 1fr;gap:14px;flex:1}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.left{display:flex;flex-direction:column;gap:12px}
+.card{background:rgba(255,255,255,0.01);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+.card-head{font-weight:700;color:var(--accent);margin-bottom:8px}
+.stat-row{display:flex;align-items:center;gap:12px}
+.big{font-size:20px;color:var(--accent);font-weight:700}
+.muted{color:var(--muted);font-size:12px}
+
+.right{display:flex;flex-direction:column}
+.term{display:flex;flex-direction:column;height:100%}
+.tabbar{display:flex;gap:8px;margin-bottom:8px}
+.tab{padding:6px 10px;border-radius:6px;background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+.tab.active{color:var(--accent);box-shadow:0 0 10px rgba(0,240,255,0.03)}
+.log{background:rgba(0,0,0,0.35);padding:12px;border-radius:8px;flex:1;overflow:auto;white-space:pre-wrap;font-size:13px}
+.prompt{display:flex;gap:8px;align-items:center;margin-top:8px}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;padding:6px 10px;border-radius:6px;color:#001;font-weight:700;cursor:pointer}
+
+.footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+
+/* responsive */
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;grid-template-rows:auto auto}
+}
