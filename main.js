@@ -1,13 +1,7 @@
-/* main.js
-   - يولّد بيانات وهمية
-   - يرسم Charts (Chart.js)
-   - يحرّك الكرة الأرضية (Three.js)
-   - يدير التيرمنال الافتراضي
-   - يوفّر كيبورد وهمي يدخل حروف في التيرمنال
-*/
+/* main.js — Hacker style + Globe fullscreen (ESC to exit) */
 
 (() => {
-  // ===== DOM elements =====
+  // ======== DOM elements ========
   const clockEl = document.getElementById('clock');
   const pingEl = document.getElementById('ping');
   const cpuValEl = document.getElementById('cpuVal');
@@ -19,15 +13,20 @@
   const procsList = document.getElementById('procsList');
   const vkContainer = document.getElementById('vk');
 
-  // ===== Charts setup =====
+  const globeContainer = document.getElementById('globe-container');
+  const overlay = document.getElementById('globe-overlay');
+  const globeFull = document.getElementById('globe-full');
+
+  // ======== Charts setup ========
   const cpuCtx = document.getElementById('cpuChart').getContext('2d');
   const netCtx = document.getElementById('netChart').getContext('2d');
   const ioCtx  = document.getElementById('ioChart').getContext('2d');
 
   function makeLine(ctx, maxY, color) {
+    const bg = color.replace(/\)\s*$/, ',0.08)');
     return new Chart(ctx, {
       type: 'line',
-      data: { labels: [], datasets: [{ data: [], tension: 0.25, pointRadius: 0, borderWidth: 1.6, borderColor: color, fill: true, backgroundColor: color.replace('1)', '0.08)') } ] },
+      data: { labels: [], datasets: [{ data: [], tension: 0.25, pointRadius: 0, borderWidth: 1.6, borderColor: color, fill: true, backgroundColor: bg }] },
       options: {
         animation: false, responsive: true,
         scales: { x: { display: false }, y: { min: 0, max: maxY, display: false } },
@@ -36,9 +35,9 @@
     });
   }
 
-  const cpuChart = makeLine(cpuCtx, 100, 'rgba(0,240,255,0.95)');
-  const netChart = makeLine(netCtx, 30, 'rgba(184,107,255,0.95)');
-  const ioChart  = makeLine(ioCtx, 50, 'rgba(0,200,180,0.95)');
+  const cpuChart = makeLine(cpuCtx, 100, 'rgba(0,255,138,0.95)');
+  const netChart = makeLine(netCtx, 30, 'rgba(0,224,255,0.95)');
+  const ioChart  = makeLine(ioCtx, 80, 'rgba(184,107,255,0.95)');
 
   function push(chart, v, max = 40) {
     chart.data.labels.push('');
@@ -49,24 +48,24 @@
     chart.update('none');
   }
 
-  // ===== Telemetry generator =====
-  let baseCpu = 18, baseMem = 44;
+  // ======== Telemetry generator ========
+  let baseCpu = 18, baseMem = 42;
   function genTelemetry() {
-    baseCpu = Math.max(1, Math.min(95, baseCpu + (Math.random() - 0.5) * 8));
-    baseMem = Math.max(5, Math.min(95, baseMem + (Math.random() - 0.5) * 6));
+    baseCpu = Math.max(1, Math.min(96, baseCpu + (Math.random() - 0.5) * 8));
+    baseMem = Math.max(5, Math.min(96, baseMem + (Math.random() - 0.5) * 6));
     const netUp = +(Math.random() * 6).toFixed(2);
     const netDown = +(Math.random() * 12).toFixed(2);
-    const tasks = 20 + Math.floor(Math.random() * 40);
+    const tasks = 12 + Math.floor(Math.random() * 48);
     return { ts: Date.now(), cpu: +baseCpu.toFixed(1), mem: +baseMem.toFixed(1), netUp, netDown, tasks };
   }
 
-  // ===== Terminal helpers =====
+  // ======== Terminal helpers ========
   function appendLog(line) {
     terminalEl.textContent = line + '\n' + terminalEl.textContent;
-    if (terminalEl.textContent.length > 8000) terminalEl.textContent = terminalEl.textContent.substring(0, 8000);
+    if (terminalEl.textContent.length > 10000) terminalEl.textContent = terminalEl.textContent.substring(0, 10000);
   }
 
-  // ===== Clock & ping =====
+  // ======== Clock & ping ========
   function tickClock() {
     const d = new Date();
     const hh = String(d.getHours()).padStart(2, '0');
@@ -77,11 +76,13 @@
   setInterval(tickClock, 1000);
   tickClock();
 
-  // ===== Globe (Three.js) =====
-  function initGlobe() {
-    const container = document.getElementById('globe-container');
-    const w = container.clientWidth;
-    const h = container.clientHeight;
+  // ======== Globe (Three.js) small + fullscreen ========
+  // We create two renderers: small (in-grid) and fullscreen overlay (bigger)
+  let small = { renderer: null, scene: null, camera: null, controls: null, mesh: null, wire: null };
+  let full  = { renderer: null, scene: null, camera: null, controls: null, mesh: null, wire: null };
+  function createGlobeScene(container, conf) {
+    const w = Math.max(120, container.clientWidth);
+    const h = Math.max(80, container.clientHeight);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
@@ -90,71 +91,130 @@
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // transparent
+    container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // light
-    const amb = new THREE.AmbientLight(0xffffff, 0.6);
+    // lights
+    const amb = new THREE.AmbientLight(0xffffff, 0.45);
     scene.add(amb);
-    const dir = new THREE.DirectionalLight(0x66f6ff, 0.6);
+    const dir = new THREE.DirectionalLight(0x00e0ff, 0.6);
     dir.position.set(5, 3, 5);
     scene.add(dir);
 
-    // earth texture (we'll use simple phong material + wireframe)
+    // geometry and material
     const geo = new THREE.SphereGeometry(0.9, 64, 64);
     const mat = new THREE.MeshStandardMaterial({
-      color: 0x0a2540,
+      color: 0x05202b,
       metalness: 0.1,
       roughness: 0.9,
-      emissive: 0x002233,
+      emissive: 0x002026,
       emissiveIntensity: 0.6
     });
     const earth = new THREE.Mesh(geo, mat);
     scene.add(earth);
 
-    // wireframe overlay
-    const wireMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, linewidth: 1, opacity: 0.12, transparent: true });
+    // wireframe
     const wireGeo = new THREE.WireframeGeometry(geo);
+    const wireMat = new THREE.LineBasicMaterial({ color: 0x00ffb1, transparent: true, opacity: 0.14 });
     const wire = new THREE.LineSegments(wireGeo, wireMat);
-    wire.material.opacity = 0.12;
     scene.add(wire);
 
-    // subtle cloud / glow using points
-    const glowMat = new THREE.PointsMaterial({ color: 0x8fbfff, size: 0.8, opacity: 0.03, transparent: true });
+    // subtle points glow
+    const glowMat = new THREE.PointsMaterial({ color: 0x00e0ff, size: 0.6, opacity: 0.03, transparent: true });
     const points = new THREE.Points(geo, glowMat);
     scene.add(points);
 
-    // orbit controls (static, but allow slight drag)
+    // controls
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableZoom = false;
+    controls.enableZoom = true;
     controls.autoRotate = false;
     controls.enablePan = false;
-    controls.rotateSpeed = 0.2;
+    controls.rotateSpeed = 0.35;
 
     // handle resize
-    window.addEventListener('resize', () => {
-      const W = container.clientWidth, H = container.clientHeight;
+    function onResize() {
+      const W = Math.max(120, container.clientWidth);
+      const H = Math.max(80, container.clientHeight);
       renderer.setSize(W, H);
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
-    });
+    }
+    window.addEventListener('resize', onResize);
 
     // animate
     let last = 0;
     function animate(t) {
       const dt = (t - last) / 1000; last = t;
-      earth.rotation.y += 0.15 * dt;
-      wire.rotation.y += 0.15 * dt;
-      points.rotation.y += 0.12 * dt;
+      earth.rotation.y += 0.12 * dt;
+      wire.rotation.y += 0.12 * dt;
+      points.rotation.y += 0.09 * dt;
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      conf._raf = requestAnimationFrame(animate);
     }
-    requestAnimationFrame(animate);
+    conf._raf = requestAnimationFrame(animate);
+
+    return { renderer, scene, camera, controls, mesh: earth, wire, destroy: () => {
+      cancelAnimationFrame(conf._raf);
+      window.removeEventListener('resize', onResize);
+      renderer.dispose();
+      container.innerHTML = '';
+    }};
   }
 
-  // init globe after DOM paints
-  setTimeout(initGlobe, 50);
+  // init small globe after ensuring container has size
+  function initSmallGlobe() {
+    // if globeContainer height is 0 (not painted yet), wait a bit
+    if (globeContainer.clientHeight < 20 || globeContainer.clientWidth < 20) {
+      setTimeout(initSmallGlobe, 80);
+      return;
+    }
+    // create small
+    small = createGlobeScene(globeContainer, small);
+  }
 
-  // ===== Virtual Keyboard builder =====
+  initSmallGlobe();
+
+  // overlay open/close
+  function openFullscreenGlobe() {
+    overlay.classList.remove('hidden');
+    // create big scene
+    full = createGlobeScene(globeFull, full);
+    full.controls.enableZoom = true;
+    full.controls.enableDamping = true;
+    // allow mouse wheel zoom
+    globeFull.querySelector('canvas').focus();
+    // close on ESC handled globally
+  }
+
+  function closeFullscreenGlobe() {
+    overlay.classList.add('hidden');
+    // destroy full renderer
+    if (full && full.destroy) {
+      full.destroy();
+      full = { renderer:null, scene:null, camera:null, controls:null, mesh:null, wire:null };
+    }
+  }
+
+  globeContainer.addEventListener('click', () => {
+    openFullscreenGlobe();
+  });
+
+  // ESC handler to close overlay
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (!overlay.classList.contains('hidden')) {
+        closeFullscreenGlobe();
+      }
+    }
+  });
+
+  // also close overlay when clicking outside big globe
+  overlay.addEventListener('click', (ev) => {
+    if (ev.target === overlay) closeFullscreenGlobe();
+  });
+
+  // ======== Virtual Keyboard builder ========
   const vkLayout = [
     ['ESC','TAB','Q','W','E','R','T','Y','U','I','O','P'],
     ['A','S','D','F','G','H','J','K','L',';'],
@@ -163,6 +223,7 @@
   ];
 
   function buildVK() {
+    vkContainer.innerHTML = '';
     vkLayout.forEach(row => {
       const div = document.createElement('div'); div.className = 'vk-row';
       row.forEach(k => {
@@ -175,53 +236,64 @@
   }
 
   function onVKPress(k) {
-    // map SPACE
     const ch = (k === 'SPACE') ? ' ' : (k.length === 1 ? k : `[${k}]`);
     typingEl.textContent = typingEl.textContent + ch;
-    // if ENTER-like (simulate running)
     if (k === 'TAB') {
       runFakeCommand(typingEl.textContent.trim());
       typingEl.textContent = '';
+    } else if (k === 'ESC') {
+      // ESC on vk will close overlay if open
+      if (!overlay.classList.contains('hidden')) closeFullscreenGlobe();
     }
   }
 
-  // ===== fake command runner =====
+  // bind physical keyboard to vk (for fun)
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') { e.preventDefault(); onVKPress('TAB'); }
+    if (e.key === 'Escape') onVKPress('ESC');
+    if (e.key.length === 1) onVKPress(e.key.toUpperCase());
+    if (e.key === ' ') onVKPress('SPACE');
+  });
+
+  // ======== fake command runner ========
   function runFakeCommand(cmd) {
     if (!cmd) return;
     appendLog(`> ${cmd}`);
-    if (cmd.toLowerCase().includes('status')) {
+    const lc = cmd.toLowerCase();
+    if (lc.includes('status')) {
       appendLog('network: ONLINE\ncpu: OK\nmem: OK');
-    } else if (cmd.toLowerCase().includes('ping')) {
-      appendLog('Pinging 8.8.8.8 with 32 bytes of data:\nReply from 8.8.8.8: bytes=32 time=12ms TTL=118');
-    } else if (cmd.toLowerCase().includes('help')) {
+    } else if (lc.includes('ping')) {
+      appendLog('Pinging 8.8.8.8: Reply time=12ms TTL=118');
+    } else if (lc.includes('help')) {
       appendLog('available: status, ping, top, clear');
-    } else if (cmd.toLowerCase().includes('clear')) {
+    } else if (lc.includes('clear')) {
       terminalEl.textContent = '';
-    } else if (cmd.toLowerCase().includes('top')) {
+    } else if (lc.includes('top')) {
       appendLog('1 eDEX-UI 43.6%\n2 nvsvc 12.1%\n3 payload.bin 7.8%');
     } else {
       appendLog(`command not found: ${cmd}`);
     }
   }
 
-  // ===== Start/stop simulation =====
+  // ======== Simulation start/stop ========
   let simId = null;
   function startSim() {
     if (simId) return;
     appendLog('[SIM] starting telemetry feed...');
     simId = setInterval(() => {
       const t = genTelemetry();
-      // update UI
       cpuValEl.textContent = Math.round(t.cpu) + '%';
       memValEl.textContent = Math.round(t.mem) + '%';
       tasksValEl.textContent = t.tasks;
       pingEl.textContent = (8 + Math.floor(Math.random() * 80)) + ' ms';
+
       appendLog(`[${new Date(t.ts).toLocaleTimeString()}] CPU:${t.cpu}% MEM:${t.mem}% UP:${t.netUp}KB/s DOWN:${t.netDown}KB/s`);
-      // update charts
+
       push(cpuChart, t.cpu);
       push(netChart, t.netUp + t.netDown);
       push(ioChart, t.netUp + t.netDown);
-      // update processes list
+
+      // update processes visually
       const p1 = Math.max(5, Math.round(t.cpu / 1.2));
       const p2 = Math.max(1, Math.round(t.mem / 3));
       const p3 = Math.max(1, Math.floor(Math.random() * 12));
@@ -243,20 +315,9 @@
     if (simId) stopSim(); else startSim();
   });
 
-  // ===== Initialize VK + small helpers =====
+  // ======== Initialize VK + welcome ========
   buildVK();
-
-  // quick bind keyboard keys to vk (for fun)
-  window.addEventListener('keydown', (e) => {
-    // prevent default for some keys only in demo
-    if (['Tab'].includes(e.key)) e.preventDefault();
-    let k = e.key.toUpperCase();
-    if (k === ' ') k = 'SPACE';
-    onVKPress(k);
-  });
-
-  // nice welcome
-  appendLog('Welcome to MalekCyberUI — demo panel');
+  appendLog('Welcome to MalekCyberUI — Hacker skin loaded');
   appendLog('Type "help" then press TAB (virtual) to run command.');
 
 })();
