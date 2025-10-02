@@ -1,110 +1,0 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KR‑OS v0.2 — واجهة سايبري</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal visible" aria-hidden="false">
-    <div class="modal-card">
-      <div class="brand">KR‑OS <span class="ver">v0.2</span></div>
-      <div class="hint">نظام تشغيل تحت الأرض — سجّل دخولك</div>
-      <form id="loginForm" autocomplete="off">
-        <label>اسم المستخدم
-          <input id="user" autocapitalize="off" autocomplete="off" />
-        </label>
-        <label>كلمة المرور
-          <input id="pass" type="password" autocomplete="new-password" />
-        </label>
-        <div class="row">
-          <button type="submit" class="btn primary">دخول</button>
-          <button type="button" id="guest" class="btn ghost">زائر</button>
-        </div>
-        <div class="muted">(تجريبي — الدخول وهمي، لا حاجة لكلمة حقيقية)</div>
-      </form>
-    </div>
-  </div>
-
-  <!-- App -->
-  <div id="app" class="hidden">
-    <header class="topbar">
-      <div class="left">
-        <div class="logo">KR‑OS</div>
-        <div class="title">نظام تشغيل تحت الأرض</div>
-      </div>
-      <div class="right">
-        <div id="trendBadge" class="badge">غير متصدر</div>
-        <div id="clock" class="clock">00:00:00</div>
-      </div>
-    </header>
-
-    <main class="layout">
-      <aside class="sidebar">
-        <div class="card small">
-          <div class="label">حالة</div>
-          <div class="mono">Kernel: <strong>KR-K</strong></div>
-          <div class="mono">Uptime: <span id="uptime">0s</span></div>
-        </div>
-
-        <div class="card">
-          <div class="label">شبكة</div>
-          <div class="stat"><span>Ping</span><strong id="ping">-- ms</strong></div>
-          <div class="stat"><span>DL</span><strong id="dl">-- KB/s</strong></div>
-          <div class="stat"><span>Nodes</span><strong id="nodes">--</strong></div>
-        </div>
-
-        <div class="card actions">
-          <button id="breakRecord" class="btn primary wide">اكسر الرقم القياسي</button>
-          <button id="mute" class="btn ghost wide">كتم الصوت</button>
-        </div>
-
-        <div class="card small muted">KR‑OS • تجربة محلية • نسخة 0.2</div>
-      </aside>
-
-      <section class="center">
-        <div class="terminal card">
-          <div class="term-head">طرفية — KR‑SHELL</div>
-          <div id="termOutput" class="term-output" tabindex="0" aria-live="polite"></div>
-          <div class="term-input">
-            <div class="prompt">root@kr:~$</div>
-            <input id="cmd" class="cmd" placeholder="اكتب أمر (help)" autocomplete="off" />
-            <button id="run" class="btn">إرسال</button>
-          </div>
-        </div>
-
-        <div class="card center-panel">
-          <div class="left-col">
-            <div class="label">كرة أرضية — منظر</div>
-            <div class="globe" id="globe" aria-hidden="true"></div>
-          </div>
-          <div class="right-col">
-            <div class="label">الإحصاءات الحية</div>
-            <div class="mono">مشاهدات: <strong id="views">0</strong></div>
-            <div class="mono">ترند: <strong id="trendCount">0</strong></div>
-            <div style="margin-top:10px;">
-              <button id="simulateView" class="btn ghost">محاكاة مشاهدة</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Trend pop -->
-    <div id="trendPop" class="trend-pop hidden">
-      <div class="pop-card">
-        <div class="big">🎉 الرقم القياسي تحطّم!</div>
-        <div class="small">KR‑OS أصبح ترند محلي</div>
-        <div class="row" style="margin-top:12px">
-          <button id="shareBtn" class="btn primary">مشاركة (نسخ رابط)</button>
-          <button id="closePop" class="btn ghost">إغلاق</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="main.js"></script>
-</body>
-</html>
