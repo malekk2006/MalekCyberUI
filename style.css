@@ -1,0 +1,127 @@
+:root{
+  --bg:#05060a;
+  --panel: rgba(255,255,255,0.03);
+  --neon-cyan:#00f3ff;
+  --neon-pink:#ff2ea6;
+  --glass: rgba(255,255,255,0.03);
+  --accent: linear-gradient(90deg,var(--neon-cyan),var(--neon-pink));
+  --mono: 'Orbitron', 'Inter', monospace;
+}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--mono);
+  background:
+    radial-gradient(800px 300px at 10% 10%, rgba(0,243,255,0.02), transparent),
+    radial-gradient(700px 300px at 90% 80%, rgba(255,46,166,0.02), transparent),
+    var(--bg);
+  color:#cfeef7;overflow:hidden;padding:18px;
+}
+
+/* app layout */
+#app{display:grid;grid-template-columns:340px 1fr;gap:18px;height:calc(100vh - 36px)}
+.leftpanel{display:flex;flex-direction:column;gap:14px}
+.mainpanel{display:flex;flex-direction:column;gap:14px}
+
+/* cards */
+.card{
+  border-radius:12px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+  border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* brand */
+.brand{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.logo{width:56px;height:56px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;color:#041018}
+.titles .main{font-size:16px;color:var(--neon-cyan);font-weight:700}
+.titles .sub{font-size:12px;color:#9ad9e6}
+
+/* stats */
+.stats .stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
+.stats .stat-row:last-child{border-bottom:0}
+.label{color:#9fdfe9;font-size:13px}
+.value{font-weight:800;color:var(--neon-pink)}
+
+/* buttons */
+.btn{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:#cfeef7;cursor:pointer}
+.btn.ghost{background:transparent}
+.btn.danger{background: linear-gradient(90deg,#ff2e6a,#ff9a2e); color:#041018}
+
+/* terminal */
+.terminal{display:flex;flex-direction:column;gap:8px}
+.term-head{font-weight:700;color:var(--neon-cyan);margin-bottom:6px}
+.term-output{background:rgba(0,0,0,0.25);height:140px;border-radius:8px;padding:8px;overflow:auto;font-family:monospace;font-size:13px;color:#9ff2ff}
+.term-input{display:flex;gap:8px}
+.term-input input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:#cfeef7;font-family:monospace}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center}
+.muted{color:#9ad9e6;opacity:0.9;font-size:13px}
+.mode{font-weight:800;color:var(--neon-pink)}
+.clock{font-family: 'Orbitron';font-weight:700;color:var(--neon-cyan)}
+
+/* visual panel */
+.visual{position:relative;height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.space{width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center}
+
+/* globe */
+.globe{
+  width:320px;height:320px;border-radius:50%;position:relative;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.04), transparent 20%),
+              linear-gradient(135deg, rgba(0,243,255,0.05), rgba(255,46,166,0.02));
+  display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6), 0 0 80px rgba(0,243,255,0.04) inset;
+  animation: slowSpin 20s linear infinite;
+  overflow:visible;
+}
+
+/* simple pseudo-globe grid for rotation illusion */
+.grid{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(10,10,10,0.15), transparent 20%),
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,0.02) 0 2deg, transparent 2deg 7deg);
+  mix-blend-mode:screen;opacity:0.9;transform:translateZ(30px);
+  filter:contrast(1.1) saturate(1.2);
+  animation: gridShift 8s linear infinite;
+}
+
+/* glow and rings */
+.glow{
+  position:absolute;inset:-20%;border-radius:50%;
+  background:radial-gradient(circle at 40% 30%, rgba(0,243,255,0.12), transparent 18%), radial-gradient(circle at 70% 70%, rgba(255,46,166,0.06), transparent 22%);
+  filter:blur(18px);
+  pointer-events:none;
+}
+.ring{
+  position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,0.03);mix-blend-mode:screen;
+}
+.ring-1{width:420px;height:420px;animation: ringA 12s linear infinite;opacity:0.7}
+.ring-2{width:520px;height:520px;animation: ringB 18s linear infinite;opacity:0.35;transform:rotateX(60deg) translateZ(-60px)}
+
+/* floating info */
+.floating-info{position:absolute;right:10%;top:8%;background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(255,255,255,0.01));padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+.floating-info .node{font-weight:800;color:var(--neon-pink)}
+.latlong,.signal{font-size:13px;color:#9fdfe9;margin-top:6px}
+
+/* footer */
+.footer{display:flex;justify-content:space-between;align-items:center}
+
+/* animations */
+@keyframes slowSpin{from{transform:rotateY(0deg)}to{transform:rotateY(-360deg)}}
+@keyframes gridShift{from{transform:translateZ(30px) rotateY(0deg)}to{transform:translateZ(30px) rotateY(-360deg)}}
+@keyframes ringA{0%{transform:rotateX(40deg) rotateY(0deg) translateZ(-10px)}50%{transform:rotateX(40deg) rotateY(180deg) translateZ(-10px)}100%{transform:rotateX(40deg) rotateY(360deg) translateZ(-10px)}}
+@keyframes ringB{0%{transform:rotateX(60deg) rotateZ(0deg)}100%{transform:rotateX(60deg) rotateZ(360deg)}}
+
+/* glitch effect helper */
+.visual.glitch .grid{filter:hue-rotate(20deg) contrast(1.4) saturate(1.8); animation-duration:0.18s}
+.visual.glitch .globe{animation-duration:0.7s; transform: translateX(6px) rotateY(-6deg)}
+.visual.glitch::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(255,0,100,0.03), transparent 20%, rgba(0,255,255,0.02));mix-blend-mode:overlay;pointer-events:none;}
+
+/* responsive */
+@media (max-width:900px){
+  #app{grid-template-columns:1fr;grid-template-rows:auto 1fr; padding:12px}
+  .leftpanel{order:2}
+  .visual{height:420px}
+}
