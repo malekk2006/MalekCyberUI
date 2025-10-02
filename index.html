@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>سايبر رقمي — واجهة خورافية</title>
+
+<!-- خط نيون -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#06060a;
+    --neon-cyan: #00f3ff;
+    --neon-pink: #ff2ea6;
+    --glass: rgba(255,255,255,0.04);
+    --accent: linear-gradient(90deg,var(--neon-cyan),var(--neon-pink));
+    --mono: 'Orbitron', 'Roboto', monospace;
+  }
+
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(0,243,255,0.04), transparent),
+                radial-gradient(900px 500px at 90% 90%, rgba(255,46,166,0.03), transparent),
+                var(--bg);
+    color:#cfeef7;
+    font-family: var(--mono);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+
+  /* layout */
+  .app{
+    display:grid;
+    grid-template-columns: 340px 1fr 360px;
+    grid-template-rows: 72px 1fr;
+    gap:18px;
+    padding:18px;
+    height:100vh;
+  }
+
+  header{
+    grid-column:1/-1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border-radius:10px;
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 30px rgba(0,243,255,0.02) inset;
+    align-self:start;
+  }
+
+  .brand{
+    display:flex;
+    gap:12px;align-items:center;
+  }
+  .logo{
+    width:56px;height:56px;border-radius:10px;
+    background: linear-gradient(135deg,var(--neon-cyan),var(--neon-pink));
+    box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 18px rgba(0,243,255,0.12);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;color:#041018;font-size:20px;
+  }
+  .title{
+    line-height:1;
+  }
+  .title .main{font-size:18px;color:var(--neon-cyan);font-weight:700}
+  .title .sub{font-size:12px;color:#9ad9e6;font-weight:400;opacity:0.9}
+
+  .controls{display:flex;gap:10px;align-items:center}
+  .btn{
+    padding:8px 12px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);
+    color: #bfeff7;cursor:pointer;font-size:13px;
+  }
+  .btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,0.04)}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+
+  /* Left sidebar */
+  .sidebar{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03);
+    display:flex;flex-direction:column;gap:12px;height:calc(100% - 0px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  }
+  .profile{
+    display:flex;gap:12px;align-items:center;
+  }
+  .avatar{
+    width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#071e21,#032028);
+    border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:22px;
+    color:var(--neon-cyan);
+  }
+  .meta{flex:1}
+  .meta h3{color:var(--neon-pink);font-size:16px}
+  .meta p{font-size:12px;color:#9cdbe6;opacity:0.85}
+
+  .menu{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .menu a{
+    display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;
+    color:#bfeff7;text-decoration:none;background:transparent;border:1px solid rgba(255,255,255,0.02);
+  }
+  .menu a:hover{background:linear-gradient(90deg,rgba(0,243,255,0.03),rgba(255,46,166,0.02))}
+
+  /* center area */
+  .center{
+    border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.03);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+    display:flex;flex-direction:column;gap:12px;height:100%;overflow:hidden;
+  }
+
+  .panel{
+    background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(255,255,255,0.01));
+    border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,0.02);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+
+  /* big terminal */
+  .terminal{
+    flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden;
+    background: radial-gradient(800px 400px at 30% 10%, rgba(0,243,255,0.02), transparent),
+                linear-gradient(180deg, rgba(2,2,8,0.6), rgba(2,2,8,0.3));
+    border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.03);
+  }
+  .term-output{
+    flex:1;overflow:auto;padding:6px;color:#7ff9ff;font-family:monospace;font-size:13px;
+    border-radius:6px;background:linear-gradient(0deg, rgba(0,0,0,0.2), transparent);
+  }
+  .term-input{
+    display:flex;gap:8px;align-items:center;padding-top:8px;
+  }
+  .prompt{color:var(--neon-pink);font-weight:700;}
+  .cmd{
+    flex:1;background:transparent;border:0;padding:8px 10px;color:#cfeef7;font-family:monospace;font-size:13px;
+    outline:none;border-radius:6px;
+  }
+
+  /* right column widgets */
+  .rightcol{display:flex;flex-direction:column;gap:12px;height:100%}
+  .widget{padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+  .big-number{font-size:28px;color:var(--neon-cyan);font-weight:900}
+
+  /* neon accents */
+  .neon{
+    position:relative;
+  }
+  .neon::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;
+    box-shadow: 0 0 18px rgba(0,243,255,0.06), 0 0 36px rgba(255,46,166,0.02) inset;
+    pointer-events:none;
+  }
+
+  /* footer-ish small print */
+  .muted{font-size:12px;color:#9fdfe9;opacity:0.8}
+
+  /* animations for background grid */
+  .scanlines{
+    position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.002) 1px, transparent 1px);background-size:100% 24px;mix-blend-mode:overlay;opacity:0.6;
+  }
+
+  /* responsive */
+  @media (max-width:1100px){
+    .app{grid-template-columns: 1fr;grid-template-rows:72px 1fr 360px; padding:12px;}
+    .rightcol{flex-direction:row;overflow:auto;height:auto}
+  }
+
+  /* typing effect helper */
+  .flash{animation:flash 1s steps(2,start) infinite}
+  @keyframes flash{50%{opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="app" role="application" aria-label="واجهة سايبر رقمي">
+  <header>
+    <div class="brand">
+      <div class="logo">SR</div>
+      <div class="title">
+        <div class="main">سايبر رقمي</div>
+        <div class="sub">واجهة خورافية — edex-esque</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="muted">متصل: <strong style="color:var(--neon-pink)">offline</strong></div>
+      <button class="btn" id="toggle-term">فتح/إغلاق الطرفية</button>
+      <button class="btn ghost" id="randomize">تغيير الألوان</button>
+    </div>
+  </header>
+
+  <!-- left -->
+  <aside class="sidebar neon panel" aria-label="قائمة">
+    <div class="profile">
+      <div class="avatar">SR</div>
+      <div class="meta">
+        <h3>OPER: صفر واحد</h3>
+        <p>محطة مرئية — وضع العرض السيبر</p>
+      </div>
+    </div>
+
+    <nav class="menu" aria-label="قائمة التنقل">
+      <a href="#" data-action="terminal">الطرفية</a>
+      <a href="#" data-action="system">النظام</a>
+      <a href="#" data-action="media">الموسيقى</a>
+      <a href="#" data-action="about">نبذة</a>
+    </nav>
+
+    <div style="margin-top:auto">
+      <div class="muted">نسخة تجربة · 0.1</div>
+    </div>
+  </aside>
+
+  <!-- center -->
+  <main class="center">
+    <div class="panel" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <div class="big-number">وضع العرض: <span style="color:var(--neon-pink)">خورافي</span></div>
+        <div class="muted" style="margin-top:6px">اضغط Enter في الطرفية لتشغيل أوامر تجريبية</div>
+      </div>
+      <div style="text-align:left">
+        <div class="muted">الوقت المحلي</div>
+        <div id="clock" class="big-number" style="font-family: 'Orbitron'"></div>
+      </div>
+    </div>
+
+    <div class="terminal panel neon" id="terminal-panel" aria-live="polite">
+      <div class="term-output" id="term-output" tabindex="0" aria-label="مخرجات الطرفية"></div>
+
+      <div class="term-input">
+        <div class="prompt">root@cyber:~$</div>
+        <input id="cmdline" class="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="اكتب أمر... (help لعرض الأوامر)" />
+        <button class="btn" id="run-btn">إرسال</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- right -->
+  <aside class="rightcol">
+    <div class="widget panel neon" style="min-height:120px">
+      <div class="muted">شبكة</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <div>
+          <div style="font-size:14px;color:var(--neon-pink)">IP</div>
+          <div id="ip" class="big-number">0.0.0.0</div>
+        </div>
+        <div>
+          <div class="muted">التحميل</div>
+          <div id="dl" class="big-number" style="color:#9ef27b">0 KB/s</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget panel neon" style="min-height:120px">
+      <div class="muted">نظام</div>
+      <div style="display:flex;gap:12px;margin-top:10px;align-items:center">
+        <div style="flex:1">
+          <div class="muted">CPU</div>
+          <div id="cpu" class="big-number">5%</div>
+        </div>
+        <div style="flex:1">
+          <div class="muted">RAM</div>
+          <div id="ram" class="big-number" style="color:#ffd166">32%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="widget panel neon" style="min-height:80px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+      <div class="muted">موسيقى</div>
+      <div id="track" style="margin-top:8px;color:var(--neon-pink)">— لا شيء —</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ====== Helper: DOM ====== */
+const termOutput = document.getElementById('term-output');
+const cmdline = document.getElementById('cmdline');
+const runBtn = document.getElementById('run-btn');
+const terminalPanel = document.getElementById('terminal-panel');
+const clockEl = document.getElementById('clock');
+const cpuEl = document.getElementById('cpu');
+const ramEl = document.getElementById('ram');
+const ipEl = document.getElementById('ip');
+const dlEl = document.getElementById('dl');
+const trackEl = document.getElementById('track');
+const toggleTerm = document.getElementById('toggle-term');
+const randomizeBtn = document.getElementById('randomize');
+
+/* ====== Basic interactions ====== */
+function appendLine(html, cls=''){
+  const el = document.createElement('div');
+  el.innerHTML = html;
+  if(cls) el.className = cls;
+  termOutput.appendChild(el);
+  termOutput.scrollTop = termOutput.scrollHeight;
+}
+
+/* Initial splash */
+const splash = [
+  '<span style="color:var(--neon-cyan);font-weight:700">سايبر رقمي</span> — واجهة تجريبية',
+  'تحميل الأنماط النموذجية... <span style="color:var(--neon-pink)">تم</span>',
+  '<span style="color:#9fdfe9">ادخل "help" لعرض أوامر الطرفية.</span>',
+  '<hr style="opacity:0.08;margin:6px 0">'
+];
+splash.forEach(s => appendLine(s));
+
+/* ====== Terminal commands ====== */
+const commands = {
+  help: () => {
+    appendLine('<b>الأوامر المتاحة:</b>');
+    appendLine('help — عرض هذه القائمة');
+    appendLine('echo [نص] — إظهار نص');
+    appendLine('time — عرض الوقت الحالي');
+    appendLine('sys — إظهار حالة النظام (محاكاة)');
+    appendLine('ip — إظهار ip (محاكاة)');
+    appendLine('play [اسم] — تشغيل مسار وهمي');
+    appendLine('clear — مسح الشاشة');
+  },
+  echo: (args) => appendLine(args.join(' ')),
+  time: () => appendLine(new Date().toLocaleString()),
+  clear: () => { termOutput.innerHTML = ''; },
+  sys: () => {
+    appendLine('نظام: CyberOS v0.1');
+    appendLine('حالة المعالج: ' + cpuEl.textContent);
+    appendLine('ذاكرة: ' + ramEl.textContent);
+  },
+  ip: () => appendLine('IP المحطة: ' + ipEl.textContent),
+  play: (args) => {
+    const name = args.join(' ') || 'مسار تجريبي';
+    trackEl.textContent = name;
+    appendLine('تشغيل: ' + name + ' 🎧');
+  }
+};
+
+function handleCommand(raw){
+  if(!raw.trim()) return;
+  appendLine('<span style="color:var(--neon-pink)">&gt; ' + escapeHtml(raw) + '</span>');
+  const parts = raw.trim().split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+  const args = parts.slice(1);
+  if(commands[cmd]) {
+    try { commands[cmd](args); }
+    catch(e){ appendLine('خطأ تنفيذ الأمر'); }
+  } else {
+    appendLine('<span style="color:#ff8aa0">أمر غير معروف: ' + cmd + ' (اكتب help)</span>');
+  }
+}
+
+/* Escape simple HTML in output */
+function escapeHtml(str){
+  return str.replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+}
+
+/* input handling */
+runBtn.onclick = () => { handleCommand(cmdline.value); cmdline.value=''; cmdline.focus(); };
+cmdline.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ handleCommand(cmdline.value); cmdline.value=''; e.preventDefault(); }
+});
+
+/* menu links */
+document.querySelectorAll('.menu a').forEach(a=>{
+  a.addEventListener('click', (ev)=>{
+    ev.preventDefault();
+    const act = a.dataset.action;
+    if(act === 'terminal') terminalPanel.style.display = terminalPanel.style.display === 'none' ? 'flex' : 'none';
+    if(act === 'system') { handleCommand('sys'); }
+    if(act === 'media') { handleCommand('play Cyber-Loop'); }
+    if(act === 'about') { appendLine('واجهة صنعها: سايبر رقمي — تجربة واجهة خورافية'); }
+  });
+});
+
+/* toggle */
+toggleTerm.addEventListener('click', ()=>{
+  terminalPanel.style.display = terminalPanel.style.display === 'none' ? 'flex' : 'none';
+});
+
+/* randomize colors */
+randomizeBtn.addEventListener('click', ()=>{
+  // pick random neon-ish colors
+  const cyan = randomColor(); const pink = randomColor();
+  document.documentElement.style.setProperty('--neon-cyan', cyan);
+  document.documentElement.style.setProperty('--neon-pink', pink);
+  appendLine('<span style="color:'+cyan+'">الألوان تم تغييرها</span>');
+});
+function randomColor(){
+  // return neon-like color
+  const h = Math.floor(Math.random()*360);
+  return `hsl(${h} 95% 55%)`;
+}
+
+/* ====== Fake system stats (simulate) ====== */
+function updateStats(){
+  const cpu = Math.floor(5 + Math.random()*30);
+  const ram = Math.floor(20 + Math.random()*60);
+  const dl = Math.floor(Math.random()*800);
+
+  cpuEl.textContent = cpu + '%';
+  ramEl.textContent = ram + '%';
+  dlEl.textContent = dl + ' KB/s';
+}
+setInterval(updateStats, 2000);
+updateStats();
+
+/* fake ip */
+function fakeIP(){
+  const a = Math.floor(10+Math.random()*200);
+  const b = Math.floor(Math.random()*255);
+  const c = Math.floor(Math.random()*255);
+  const d = Math.floor(Math.random()*255);
+  ipEl.textContent = `${a}.${b}.${c}.${d}`;
+}
+fakeIP();
+
+/* clock */
+function tick(){
+  const now = new Date();
+  const hh = now.getHours().toString().padStart(2,'0');
+  const mm = now.getMinutes().toString().padStart(2,'0');
+  const ss = now.getSeconds().toString().padStart(2,'0');
+  clockEl.textContent = `${hh}:${mm}:${ss}`;
+  requestAnimationFrame(()=>{});
+}
+setInterval(tick, 1000);
+tick();
+
+/* small accessibility: focus output with keyboard */
+termOutput.addEventListener('keydown', (e)=>{
+  if(e.key === 'c' && (e.ctrlKey || e.metaKey)){ termOutput.innerHTML=''; }
+});
+
+/* initial terminal hidden on small screens */
+if(window.innerWidth < 900){
+  terminalPanel.style.display = 'none';
+}
+
+/* ====== Nice little demo script: auto-type welcome lines ====== */
+(function autoType(){
+  const lines = [
+    'نظام: Booting CyberOS...',
+    'تحميل وحدات النيون [#####-----] 50%',
+    'تهيئة العرض... تم',
+    'مرحباً، أي أوامر تريد تجربة اليوم؟'
+  ];
+  let i=0;
+  let ptr=0;
+  function step(){
+    if(i >= lines.length) return;
+    const target = lines[i];
+    if(ptr <= target.length){
+      const out = termOutput.querySelector('.ty') || (function(){ const d = document.createElement('div'); d.className='ty'; termOutput.appendChild(d); return d; })();
+      out.innerHTML = '<span style="color:#9fdfe9">' + escapeHtml(target.substring(0,ptr)) + '</span><span class="flash">▌</span>';
+      ptr++;
+      termOutput.scrollTop = termOutput.scrollHeight;
+      setTimeout(step, 40 + Math.random()*60);
+    } else {
+      const out = termOutput.querySelector('.ty');
+      if(out) out.classList.remove('ty');
+      i++; ptr=0;
+      setTimeout(step, 400);
+    }
+  }
+  setTimeout(step, 600);
+})();
+
+/* keep focus on input for quick typing */
+cmdline.focus();
+</script>
+
+</body>
+</html>
