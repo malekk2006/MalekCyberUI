@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>Cyber CodeSmith — صانع الأكواد بالذكاء الاصطناعي</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>⚡ Cyber CodeSmith</h1>
+      <p class="muted">صانع أكواد رسمي بالذكاء الاصطناعي</p>
+    </header>
+
+    <section class="controls">
+      <label>اللغة:
+        <select id="langSelect">
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="js">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="spring">Spring Boot</option>
+          <option value="bash">Bash</option>
+          <option value="sql">SQL</option>
+        </select>
+      </label>
+      <label>اسم المشروع: <input id="projectName" value="MyProject"></label>
+      <label>المؤلف: <input id="author" value="Malek"></label>
+      <button id="aiBtn" class="btn primary">توليد بالذكاء الصناعي</button>
+    </section>
+
+    <section class="editor">
+      <textarea id="code" spellcheck="false"></textarea>
+    </section>
+
+    <footer>
+      <p class="muted">Made with ❤️ by Cyber</p>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
