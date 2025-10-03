@@ -1,71 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hacker OS — Simulator</title>
-
-  <!-- Fonts & libs -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
+  <title>CodeSmith — صانع الأكواد (متصفح)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="matrix"></canvas>
+  <div class="app">
+    <header>
+      <h1>CodeSmith <span class="muted">— صانع الأكواد المجاني</span></h1>
+      <div class="meta">أنشئ قوالب، عدّل، انسخ، نزّل أو عاين HTML مباشرة</div>
+    </header>
 
-  <div class="hud">
-    <div class="topbar">
-      <div class="brand">HACKER-OS <span class="muted">simulator</span></div>
-      <div class="controls">
-        <button id="btnPanic" class="btn warn">PANIC</button>
-        <button id="btnFull" class="btn">F11</button>
-        <span id="clock" class="clock muted">00:00:00</span>
+    <section class="controls">
+      <label>اللغة:
+        <select id="langSelect">
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="js">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="spring">Spring Boot (Java)</option>
+          <option value="bash">Bash</option>
+          <option value="sql">SQL</option>
+        </select>
+      </label>
+
+      <label>القالب:
+        <select id="templateSelect"></select>
+      </label>
+
+      <label>اسم المشروع:
+        <input id="projectName" placeholder="MyProject" />
+      </label>
+
+      <label>المؤلف:
+        <input id="author" placeholder="Malek" />
+      </label>
+
+      <div class="actions">
+        <button id="loadTemplate" class="btn">تحميل القالب</button>
+        <button id="generateBtn" class="btn primary">توليد</button>
+        <button id="downloadBtn" class="btn">تنزيل</button>
+        <button id="copyBtn" class="btn">نسخ</button>
+        <button id="previewBtn" class="btn">معاينة HTML</button>
       </div>
-    </div>
+    </section>
 
-    <!-- Draggable windows -->
-    <div id="termWin" class="win draggable">
-      <div class="win-title">Terminal — [root@cyber ~] <span class="win-actions"><button class="mini" data-act="min">_</button></span></div>
-      <pre id="termOut" class="term-out"></pre>
-      <div class="term-input">
-        <span class="prompt">#</span>
-        <input id="termInput" placeholder="type command (help, scan, status, clear, hack)"/>
-        <button id="runBtn" class="btn small">RUN</button>
+    <section class="editor-area">
+      <div class="editor">
+        <div class="editor-head">المحرر <span id="fileName" class="muted">—</span></div>
+        <textarea id="code" spellcheck="false"></textarea>
       </div>
-    </div>
 
-    <div id="logsWin" class="win draggable right">
-      <div class="win-title">Logs</div>
-      <div id="logsOut" class="logs-out"></div>
-    </div>
+      <aside class="preview-panel">
+        <div class="panel-head">معاينة</div>
+        <div id="preview" class="preview">اضغط "معاينة HTML" لعرض النتيجة هنا</div>
+      </aside>
+    </section>
 
-    <div id="globeWin" class="win draggable left">
-      <div class="win-title">Globe</div>
-      <div id="globeMini" class="globe-mini"></div>
-      <div class="globe-actions muted">Click globe to expand</div>
-    </div>
-
-    <!-- progress modal -->
-    <div id="progressModal" class="modal hidden">
-      <div class="modal-card">
-        <div class="modal-title">Hacking target — in progress</div>
-        <div class="progress-bar"><div id="progressFill" style="width:0%"></div></div>
-        <div id="progressText" class="muted">0%</div>
-        <button id="cancelHack" class="btn warn">CANCEL</button>
-      </div>
-    </div>
-
-    <!-- globe overlay fullscreen -->
-    <div id="globeOverlay" class="overlay hidden">
-      <div id="globeFull" class="globe-full"></div>
-      <div class="overlay-hint muted">ESC to close • drag to orbit • wheel to zoom</div>
-    </div>
-
+    <footer>
+      <div class="muted">CodeSmith — مجاني للعمل محلياً · لإضافة ميزات متقدمة اطلب مني</div>
+    </footer>
   </div>
 
-  <script src="main.js" defer></script>
+  <script src="main.js"></script>
 </body>
 </html>
